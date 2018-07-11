@@ -4,4 +4,4 @@
 sysrc -f /etc/rc.conf plexmediaserver_enable="YES"
 
 # Start the service
-service plexmediaserver start 2>/dev/null
+service plexmediaserver restart 2>/dev/null
