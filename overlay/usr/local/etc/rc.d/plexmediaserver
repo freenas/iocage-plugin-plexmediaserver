@@ -44,7 +44,7 @@ plex_precmd()
 	export HOME="${plexmediaserver_support_path}/Plex Media Server"
 	export PYTHONHOME="/usr/local/share/plexmediaserver/Resources/Python"
 	export SCRIPTPATH="/usr/local/share/plexmediaserver"
-	export LD_LIBRARY_PATH="/usr/local/share/plexmediaserver"
+	export LD_LIBRARY_PATH="${SCRIPTPATH}"
 	export PLEX_MEDIA_SERVER_HOME="${SCRIPTPATH}"
 	export PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=${plexmediaserver_maxplugins}
 	export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=${plexmediaserver_support_path}
