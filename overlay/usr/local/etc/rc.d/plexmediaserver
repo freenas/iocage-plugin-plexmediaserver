@@ -32,8 +32,9 @@ load_rc_config $name
 
 command=/usr/sbin/daemon
 procname="/usr/local/share/plexmediaserver/Plex_Media_Server"
-command_args="-r -f ${procname}"
-pidfile=/var/run/plex/plex.pid
+plexpidfile=/var/run/plex/plex-service.pid
+pidfile=/var/run/plex/plex-daemon.pid
+command_args="-r -p ${plexpidfile} -f ${procname}"
 start_precmd=plex_precmd
 stop_precmd=plex_stop_precmd
 stop_postcmd=plex_stop_postcmd
@@ -87,13 +88,14 @@ plex_precmd()
 
 plex_stop_precmd()
 {
-        if [ -r ${pidfile} ]; then
-                export _PLEXPID=$(check_pidfile ${pidfile} ${procname})
+        if [ -r ${plexpidfile} ]; then
+                export _PLEXPID=$(check_pidfile ${plexpidfile} ${procname})
         fi
 }
 
 plex_stop_postcmd()
 {
+	pkill -9 -F ${pidfile}
         _PLEX_CHILDREN=$(pgrep -g ${_PLEXPID})
         echo "Cleaning up leftover child processes."
         kill -9 ${_PLEX_CHILDREN}
