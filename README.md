@@ -1,2 +1,2 @@
 # iocage-plugin-plexmediaserver
-Artifact file(s) for PlexMediaServer iocage plugin
+Artifact file(s) for Plex Media Server iocage plugin
