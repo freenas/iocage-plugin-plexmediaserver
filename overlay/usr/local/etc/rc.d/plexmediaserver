@@ -32,12 +32,12 @@ load_rc_config $name
 
 command=/usr/sbin/daemon
 procname="/usr/local/share/plexmediaserver/Plex_Media_Server"
-plexpidfile=/var/run/plex/plex-service.pid
 pidfile=/var/run/plex/plex-daemon.pid
-command_args="-r -p ${plexpidfile} -f ${procname}"
+plexpidfile=/var/run/plex/plex-server.pid
+command_args="-r -P $pidfile -f ${procname}"
 start_precmd=plex_precmd
 stop_precmd=plex_stop_precmd
-stop_postcmd=plex_stop_postcmd
+stop_cmd=plex_stop
 
 plex_precmd()
 {
@@ -61,15 +61,15 @@ plex_precmd()
         export PLEX_MEDIA_SERVER_HOME="${SCRIPTPATH}"
         export PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS=${plexmediaserver_maxplugins}
         export PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=${plexmediaserver_support_path}
-        export PLEX_MEDIA_SERVER_PIDFILE=${pidfile}
+        export PLEX_MEDIA_SERVER_PIDFILE=${plexpidfile}
         export PLEX_MEDIA_SERVER_LOG_DIR="${plexmediaserver_support_path}/Plex Media Server/Logs"
         export PATH="${SCRIPTPATH}/Resources/Python/bin:${PATH}"
         export LC_ALL="en_US.UTF-8"
         export LANG="en_US.UTF-8"
         ulimit -s 3000
 
-        if [ ! -d ${pidfile%/*} ]; then
-                install -d -o ${plexmediaserver_user} ${pidfile%/*};
+        if [ ! -d ${plexpidfile%/*} ]; then
+                install -d -o ${plexmediaserver_user} ${plexpidfile%/*};
         fi
 
         if [ ! -d "${plexmediaserver_support_path}/Plex Media Server" ]; then
@@ -88,18 +88,13 @@ plex_precmd()
 
 plex_stop_precmd()
 {
-        if [ -r ${plexpidfile} ]; then
-                export _PLEXPID=$(check_pidfile ${plexpidfile} ${procname})
-        fi
+	killall -9 -u ${plexmediaserver_user}
 }
 
-plex_stop_postcmd()
+plex_stop()
 {
-	pkill -9 -F ${pidfile}
-        _PLEX_CHILDREN=$(pgrep -g ${_PLEXPID})
-        echo "Cleaning up leftover child processes."
-        kill -9 ${_PLEX_CHILDREN}
-        wait_for_pids ${_PLEX_CHILDREN}
+	pkill -9 -F ${pidfile} >/dev/null 2>/dev/null
+	return 0
 }
 
 run_rc_command "$1"
