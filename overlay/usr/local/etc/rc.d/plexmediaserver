@@ -72,13 +72,11 @@ plex_precmd()
         fi
 
         if [ ! -d "${plexmediaserver_support_path}/Plex Media Server" ]; then
-                install -d -g ${plexmediaserver_group} -o ${plexmediaserver_user} "${plexmediaserver_support_path}/Plex
-Media Server";
+                install -d -g ${plexmediaserver_group} -o ${plexmediaserver_user} "${plexmediaserver_support_path}/Plex Media Server";
         fi
 
         if [ ! -d "${plexmediaserver_support_path}/Plex" ]; then
-                install -d -g ${plexmediaserver_group} -o ${plexmediaserver_user} "${plexmediaserver_support_path}/Plex"
-;
+                install -d -g ${plexmediaserver_group} -o ${plexmediaserver_user} "${plexmediaserver_support_path}/Plex";
         fi
 
         if [ ${plexmediaserver_tmp} ]; then
